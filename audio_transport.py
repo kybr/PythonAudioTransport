@@ -10,18 +10,8 @@ from time import time
 
 SAMPLERATE = 48000
 AUDIO_FILE1 = "440sine48k.wav"
-AUDIO_FILE2 = "440saw48k.wav"
+AUDIO_FILE2 = "01 Soft Channel 001.wav"
 
-# def timing(f):
-#     @wraps(f)
-#     def wrap(args, **kw):
-#         ts = time()
-#         result = f(args, **kw)
-#         te = time()
-#         print 'func:%r args:[%r, %r] took: %2.4f sec' % \
-#           (f.name, args, kw, te-ts)
-#         return result
-#     return wrap
 
 class AudioPlayer:
 
@@ -35,17 +25,18 @@ class AudioPlayer:
 		self.index = (self.index + frame_count) % (self.arr.shape[0] // 2)
 		return (out, pyaudio.paContinue)
 
+
 def compute_transport_matrix(X_nT, Y_nT):	
 	# Only use magnitude (for now).
-	X_nT = np.abs(X_nT)
-	Y_nT = np.abs(Y_nT)
+	# X_nT = np.abs(X_nT)
+	# Y_nT = np.abs(Y_nT)
 
 	# initialize transport algorithm
 	num_bins = X_nT.shape[0]
 	T = X_nT.shape[1]
 
 	#PI_nnT = np.zeros((n, n, T)) # policy we are solving for
-	PI_T = [[] for _ in range(T)]
+	PI_T = [[] for _ in range(T)] # python list sparse matrix Policy
 	normsx_T = np.zeros(T)
 	normsy_T = np.zeros(T)
 
@@ -96,7 +87,10 @@ def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T):
 		# this means that for a value k, and timestep t, 
 	for t in tqdm(range(T)):
 		for i, j, PI_ij in PI_T[t]:
-			w = (1-k) * wx[i] + k*wx[j]
+
+			w = (1-k) * wx[i] + k*wx[j] # floating point frequency
+
+
 			w_index = w * freq_to_idx
 			w_index1 = int(w_index)
 			# Z_nT[w_index1] += PI_nnT[i][j]
@@ -105,7 +99,7 @@ def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T):
 			if w_alpha != 0: # if its 0 we may get an index out of bounds
 				Z_nT[w_index1 + 1, t] += w_alpha * PI_ij
 	
-	# normalize for loudness
+	# unnormalize for loudness
 	for t in range(T):
 		Z_nT[:, t] *= (1 - k) * normsx_T[t] + k * normsy_T[t]
 
@@ -129,7 +123,7 @@ elif len(audioy) > len(audiox):
 
 audio_length = audiox.shape[0]
 
-fft_size = 2048
+fft_size = 1024
 num_bins = fft_size // 2 + 1
 
 
@@ -160,13 +154,11 @@ PI_T, normsx_T, normsy_T = compute_transport_matrix(X,Y)
 END_TIME = time()
 print("COMPUTE TRANSPORT MATRIX TIME:", END_TIME - START_TIME)
 
-
 k = float(input("enter interpolation value (0 to 1, -1 to exit): "))
 
 aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T)
 
 audio_output_array = np.concatenate([aoa, aoa])
-
 
 pya = pyaudio.PyAudio()
 
