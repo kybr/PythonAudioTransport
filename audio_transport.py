@@ -10,7 +10,7 @@ import time
 
 SAMPLERATE = 48000
 AUDIO_FILE1 = "440sine48k.wav"
-AUDIO_FILE2 = "01 Soft Channel 001.wav"
+AUDIO_FILE2 = "440saw48k.wav"
 
 # load audio
 audiox, srx = librosa.load(AUDIO_FILE1, sr=SAMPLERATE)
@@ -25,7 +25,7 @@ elif len(audioy) > len(audiox):
 
 audio_length = audiox.shape[0]
 
-fft_size = 8192
+fft_size = 2048
 num_bins = fft_size // 2 + 1
 
 
@@ -50,7 +50,7 @@ T = tx.shape[0] # Max number of FFT steps
 # initialize transport algorithm
 
 #PI_nnT = np.zeros((n, n, T)) # policy we are solving for
-PI_T = [[] for _ in range(T)]
+PI_T = [[] for _ in range(T)] # python list sparse matrix Policy
 normsx_T = np.zeros(T)
 normsy_T = np.zeros(T)
 
@@ -67,7 +67,7 @@ for t in range(T):
 	X_ = X[:, t] / normsx_T[t]
 	Y_ = Y[:, t] / normsy_T[t]
 
-	px, py = X_[i], Y_[j]
+	px, py = X_[i], Y_[j] # amount of mass left in current bin
 
 	# Audio Transport Algorithm
 	while True:
@@ -105,7 +105,10 @@ def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T):
 		# this means that for a value k, and timestep t, 
 	for t in tqdm(range(T)):
 		for i, j, PI_ij in PI_T[t]:
-			w = (1-k) * wx[i] + k*wx[j]
+
+			w = (1-k) * wx[i] + k*wx[j] # floating point frequency
+
+
 			w_index = w * freq_to_idx
 			w_index1 = int(w_index)
 			# Z_nT[w_index1] += PI_nnT[i][j]
@@ -114,7 +117,7 @@ def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T):
 			if w_alpha != 0: # if its 0 we may get an index out of bounds
 				Z_nT[w_index1 + 1, t] += w_alpha * PI_ij
 	
-	# normalize for loudness
+	# unnormalize for loudness
 	for t in range(T):
 		Z_nT[:, t] *= (1 - k) * normsx_T[t] + k * normsy_T[t]
 
