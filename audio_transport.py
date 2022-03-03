@@ -1,4 +1,4 @@
-from scipy.signal import stft, istft
+from scipy.signal import stft, istft, check_COLA
 import librosa
 import soundfile as sf
 import numpy as np
@@ -9,9 +9,13 @@ from tqdm import tqdm
 from time import time
 
 SAMPLERATE = 48000
-AUDIO_FILE1 = "440sine48k.wav"
-AUDIO_FILE2 = "01 Soft Channel 001.wav"
+AUDIO_FILE1 = "01 Soft Channel 001.wav"
+AUDIO_FILE2 = "440saw48k.wav"
 
+fft_size = 1024
+num_bins = fft_size // 2 + 1
+nperseg = 1024 # 16384
+window = "hann"
 
 class AudioPlayer:
 
@@ -28,8 +32,27 @@ class AudioPlayer:
 
 def compute_transport_matrix(X_nT, Y_nT):	
 	# Only use magnitude (for now).
-	# X_nT = np.abs(X_nT)
-	# Y_nT = np.abs(Y_nT)
+	X_nT = np.abs(X_nT)
+	Y_nT = np.abs(Y_nT)
+
+	# fig, ax = plt.subplots()
+	# # ax.set_yscale('log')
+	# plt.ylim(0, 2000)
+	# ax.pcolormesh(tx, wx, np.abs(X_nT))
+	# # plt.imshow(np.abs(Z_nT))
+	# # plt.plot(np.abs(Z_nT[:, 0]))
+	# plt.show()
+
+	# fig, ax = plt.subplots()
+	# # ax.set_yscale('log')
+	# plt.ylim(0, 2000)
+	# ax.pcolormesh(tx, wx, np.abs(Y_nT))
+	# # plt.imshow(np.abs(Z_nT))
+	# # plt.plot(np.abs(Z_nT[:, 0]))
+	# plt.show()
+
+	# X_phase = np.angle(X_nT)
+	# Y_phase = np.angle(Y_nT)
 
 	# initialize transport algorithm
 	num_bins = X_nT.shape[0]
@@ -43,12 +66,11 @@ def compute_transport_matrix(X_nT, Y_nT):
 
 	# Audio Tranport Algo for each STFT Bin
 	for t in range(T):
-
 		i, j = 0, 0
 
 		# get normalized magnitude vectors
-		normsx_T[t] = np.linalg.norm(X_nT[:, t])
-		normsy_T[t] = np.linalg.norm(Y_nT[:, t])
+		normsx_T[t] = np.sum(X_nT[:, t])
+		normsy_T[t] = np.sum(Y_nT[:, t])
 
 		X_ = X_nT[:, t] / normsx_T[t]
 		Y_ = Y_nT[:, t] / normsy_T[t]
@@ -79,7 +101,7 @@ def compute_transport_matrix(X_nT, Y_nT):
 	return PI_T, normsx_T, normsy_T
 
 # depends on a few of the variables we just calculated
-def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T):
+def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T, tx):
 	START_TIME = time()
 	T = len(PI_T)
 	Z_nT = np.zeros_like(X)
@@ -103,7 +125,16 @@ def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T):
 	for t in range(T):
 		Z_nT[:, t] *= (1 - k) * normsx_T[t] + k * normsy_T[t]
 
-	t, output = istft(Z_nT, fs=SAMPLERATE, window='hann', nperseg=1024, nfft=fft_size)
+	# fig, ax = plt.subplots()
+	# plt.ylim(0, 2000)
+	# ax.pcolormesh(tx, wx, np.abs(Z_nT))
+	# plt.show()
+
+	output = librosa.griffinlim(Z_nT, n_iter=200, hop_length=nperseg//2, win_length=nperseg, n_fft=fft_size, window=window)
+	output = output / (2*np.max(output))
+
+	# assert check_COLA(window, nperseg, nperseg//2)
+	# t, output = istft(Z_nT, fs=SAMPLERATE, window=window, nperseg=nperseg, nfft=fft_size)
 	END_TIME = time()
 	print("COMPUTE INTERPOLATION TOTAL TIME:", END_TIME - START_TIME)
 	return output
@@ -123,15 +154,11 @@ elif len(audioy) > len(audiox):
 
 audio_length = audiox.shape[0]
 
-fft_size = 1024
-num_bins = fft_size // 2 + 1
-
-
 # get stft
 START_TIME = time()
 
-wx, tx, X = stft(audiox, fs=SAMPLERATE, window='hann', nperseg=1024, nfft=fft_size)
-wy, ty, Y = stft(audioy, fs=SAMPLERATE, window='hann', nperseg=1024, nfft=fft_size)
+wx, tx, X = stft(audiox, fs=SAMPLERATE, window=window, nperseg=nperseg, nfft=fft_size)
+wy, ty, Y = stft(audioy, fs=SAMPLERATE, window=window, nperseg=nperseg, nfft=fft_size)
 # T = tx.shape[0] # Max number of FFT steps
 END_TIME = time()
 print("STFT TIME:", END_TIME - START_TIME)
@@ -156,7 +183,7 @@ print("COMPUTE TRANSPORT MATRIX TIME:", END_TIME - START_TIME)
 
 k = float(input("enter interpolation value (0 to 1, -1 to exit): "))
 
-aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T)
+aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T, tx)
 
 audio_output_array = np.concatenate([aoa, aoa])
 
@@ -179,7 +206,7 @@ stream.start_stream()
 while k != -1 and stream.is_active():
 	k = float(input("enter interpolation value (0 to 1, -1 to exit): "))
 	# TODO: Update audio_output_array and calculate new interpolation
-	aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T)
+	aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T, tx)
 	player.arr = np.concatenate([aoa, aoa])
 	# time.sleep(0.5)
 
