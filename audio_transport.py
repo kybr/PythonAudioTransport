@@ -1,5 +1,6 @@
 from scipy.signal import istft, stft
 import librosa
+import soundfile as sf
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
@@ -81,6 +82,7 @@ def main():
 
 		# when I use "T", that refers to number of windows in STFT
 		T = len(spectral_points_x_T)
+		N = len(spectral_points_x_T[0])
 
 		# initialize phase list and interpolated output list
 		# we store the phase of the previous frame for reconstruction purposes
@@ -88,19 +90,31 @@ def main():
 		spectral_points_interp_T = []
 
 		# for each STFT time frame, perform optimal transport based interpolation
-		for t in range(T):
-			spectral_points_interp_T.append(
-				interpolate(
-					spectral_points_x_T[t],
-					spectral_points_y_T[t],
-					phases,
-					FFT_SIZE,
-					interpolation_factor
-				)
+		test_freqs = [p.freq for p in spectral_points_x_T[30]][:N//10]
+		test_freq_reassigned = [p.freq_reassigned for p in spectral_points_x_T[30]][:N//10]
+		# plt.plot(test_freqs, test_freqs)
+		# plt.plot(test_freqs, test_freq_reassigned)
+		# plt.plot([p.freq_reassigned for p in spectral_points_x_T[1]], [np.abs(p.value) for p in spectral_points_x_T[1]])
+		# plt.show()
+		for t in tqdm(range(T)):
+			phases, output_points = interpolate(
+				spectral_points_x_T[t],
+				spectral_points_y_T[t],
+				phases,
+				FFT_SIZE,
+				interpolation_factor
 			)
-
+			spectral_points_interp_T.append(
+				output_points
+			)
 		# synthesize audio from interpolated spectrum, replace audio in player
 		output = synthesize(spectral_points_interp_T)
+
+		# normalize Output
+		if (np.max(np.abs(output)) != 0):
+			output = output / (2*np.max(np.abs(output)))
+
+		# sf.write("output.wav", output, SAMPLERATE)
 
 		player.arr = np.concatenate([output, output])
 
@@ -129,6 +143,9 @@ def analyze(audio):
 
 	# We compute 3 different STFTs with 3 different windows
 	windows = [hann(NPERSEG), time_weighted_hann(NPERSEG), derivative_hann(NPERSEG)]
+	# plt.plot(windows[0])
+	# plt.plot(windows[1])
+	# plt.show()
 	# freqs, times, X = stft(audio, fs=SAMPLERATE, window=windows[0], nperseg=NPERSEG, nfft=FFT_SIZE)
 	X = librosa.stft(audio, n_fft=FFT_SIZE, hop_length=NPERSEG//2, win_length= NPERSEG, window=windows[0], center=False)
 	# _, _, X_time_weighted_hann = stft(audio, fs=SAMPLERATE, window=windows[1], nperseg=NPERSEG, nfft=FFT_SIZE)
@@ -142,26 +159,28 @@ def analyze(audio):
 	output_points = []
 
 	# For each time frame
-	for t in range(T):
+	for t in tqdm(range(T)):
 		output_points.append([])
 
 		# get the time of the center of this frame
 		center_time = (1 + 2*t) * NPERSEG / (4 * SAMPLERATE)
 		# For each frequency bin
 		for n in range(N):
-			p = SpectralPoint(X[n][t], center_time, freqs[n])
+			# p = SpectralPoint(X[n][t], center_time, freqs[n])
+			# This is a weird frequency value, but I think its in rad/sec instead of oscillations/sec
+			p = SpectralPoint(X[n][t], 2 * np.pi * n * SAMPLERATE / FFT_SIZE)
 
 			# Compute how the frequency and time reassignment
 			# going off of https://arxiv.org/pdf/0903.3080.pdf on page 20 eq. (64) and (65)
 			# slightly different from from https://github.com/sportdeath/audio_transport/blob/24171de435bc5c07ad57433907581399b81fd6b3/src/spectral.cpp#L162
 			# pretty sure the github implementation is a bit wrong - idk though
-			conj_over_norm = np.conj(X[n][t]) / (abs(X[n][t])**2)
-			dphase_dt = -np.real(X_time_weighted_hann[n][t] * conj_over_norm)
-			dphase_domega = np.imag(X_derivative_hann[n][t] * conj_over_norm)
-
+			conj_over_norm = np.conj(X[n][t]) / (np.abs(X[n][t])**2)
+			# dphase_domega = np.real(X_time_weighted_hann[n][t] * conj_over_norm)
+			dphase_dt = -np.imag(X_derivative_hann[n][t] * conj_over_norm)
+			# print(X_time_weighted_hann[n][t] * conj_over_norm)
 			# Compute the reassigned time and frequency
-			p.time_reassigned = p.time + dphase_dt
-			p.freq_reassigned = p.freq + dphase_domega
+			# p.time_reassigned = p.time + dphase_dt
+			p.freq_reassigned = p.freq + dphase_dt
 
 			# add p to output list
 			output_points[t].append(p)
@@ -219,6 +238,9 @@ def interpolate(points_x_N, points_y_N, phases, window_size, interp_factor):
 
 		new_phase = center_phase + (interp_freq * window_size / 2) / 2 + np.pi * interp_bin
 
+		# # UNCOMMENT FOR HORIZONTAL INCOHERENCE
+		# center_phase = np.angle(points_x_N[interp_bin].value)
+
 		# Place masses filling up new phases and interpolated
 		place_mass(
 			mass_x, 
@@ -236,7 +258,7 @@ def interpolate(points_x_N, points_y_N, phases, window_size, interp_factor):
 		place_mass(
 			mass_y, 
 			interp_bin, 
-			(1 - interp_factor) * mass / mass_y.mass,
+			interp_factor * mass / mass_y.mass,
 			interp_freq,
 			center_phase,
 			points_y_N,
@@ -250,7 +272,7 @@ def interpolate(points_x_N, points_y_N, phases, window_size, interp_factor):
 	for i in range(N):
 		phases[i] = new_phases[i]
 
-	return interpolated
+	return phases, interpolated
 
 		
 def place_mass(mass, center_bin, scale, interp_freq, center_phase, inp, out, next_phase, phases, amplitudes):
@@ -286,11 +308,17 @@ def group_spectrum(spectral_points_N):
 
 	for i, p in enumerate(spectral_points_N):
 		current_sign = p.freq_reassigned > p.freq
+
+
+		# # To hear vertical incoherence uncomment this:
+		# sign = False
+		# current_sign = not sign
+
 		if current_sign != sign:
 			if sign:
 				# We are falling - going from freq_reassigned greater to freq_reassigned less
 				# falling is center bin - red dot in paper diagram
-				# https://arxiv.org/pdf/1906.06763.pdf top right of page 3 
+				# https://arxiv.org/pdf/1906.06763.pdf top right of page 3
 
 				# this is an edge case - we will go to the mass we are closest to
 				# because sign = True and current_sign = False, both of these will be positive
@@ -378,17 +406,23 @@ def transport_matrix(X, Y):
 def synthesize(spectral_points_TN):
 	# Spectral Points to Audio
 	# assume spectral points are a 2D array of T by N
-	Z_NT = np.array([[p.value for p in t] for t in spectral_points_TN])
+	Z_NT = np.array([[p.value for p in t] for t in spectral_points_TN]).T
 
 	# perform istft
-	return istft(Z_NT, fs=SAMPLERATE, window="hann", nperseg=NPERSEG, nfft=FFT_SIZE)[1]
+	t, output = istft(Z_NT, fs=SAMPLERATE, window="hann", nperseg=NPERSEG, nfft=FFT_SIZE)
+	# output = librosa.istft(Z_NT, n_fft=FFT_SIZE, hop_length=NPERSEG//2, win_length= NPERSEG, window=hann(NPERSEG), center=False)
+	return output.astype(np.float32)
 
 def hann(length):
 	# return a hann window
+	# t = np.arange(-(length - 1) // 2, 1 + (length - 1) // 2)
+	# return 0.5 + 0.5 * np.cos(2 * np.pi * t/(length - 1))
 	return np.sin(np.pi * np.arange(length) / length)**2
 
 def time_weighted_hann(length):
 	# return a time weighted hann window of length
+	# t = np.arange(-(length - 1) // 2, 1 + (length - 1) // 2)
+	# return t * hann(length) / SAMPLERATE
 	return np.arange(length) * hann(length) / SAMPLERATE
 
 def derivative_hann(length):
@@ -396,143 +430,14 @@ def derivative_hann(length):
 	# length = sr * window_length_in_seconds
 	# we are deriving w.r.t t = np.arange(length) / sr 
 	# derivative uses law: 2sin(x)cos(x) = sin(2x)
+	# t = np.arange(-(length - 1) // 2, 1 + (length - 1) // 2)
+	# window =  -(np.pi * SAMPLERATE)/(length - 1) * np.sin(2 * np.pi * t/(length - 1))
+	# return window
+
 	return np.pi * SAMPLERATE * np.sin(2 * np.pi * np.arange(length) / length) / length
+	# return np.sin(2 * np.pi * np.arange(length) / length)
+	# return np.sin(np.arange(length))
 
 
 if __name__ == "__main__":
 	main()
-
-# def compute_transport_matrix(X_nT, Y_nT):	
-# 	# Only use magnitude (for now).
-# 	X_nT = np.abs(X_nT)
-# 	Y_nT = np.abs(Y_nT)
-
-# 	# initialize transport algorithm
-# 	num_bins = X_nT.shape[0]
-# 	T = X_nT.shape[1]
-
-# 	#PI_nnT = np.zeros((n, n, T)) # policy we are solving for
-# 	PI_T = [[] for _ in range(T)] # python list sparse matrix Policy
-# 	normsx_T = np.zeros(T)
-# 	normsy_T = np.zeros(T)
-
-
-# 	# Audio Tranport Algo for each STFT Bin
-# 	for t in range(T):
-# 		i, j = 0, 0
-
-# 		# get normalized magnitude vectors
-# 		normsx_T[t] = np.sum(X_nT[:, t])
-# 		normsy_T[t] = np.sum(Y_nT[:, t])
-
-# 		X_ = X_nT[:, t] / normsx_T[t]
-# 		Y_ = Y_nT[:, t] / normsy_T[t]
-
-# 		px, py = X_[i], Y_[j]
-
-# 		# Audio Transport Algorithm
-# 		while True:
-# 			if px < py:
-# 				PI_T[t].append((i, j, px))
-# 				i += 1
-
-# 				if i >= num_bins:
-# 					break
-
-# 				py = py - px
-# 				px = X_[i]
-# 			else:
-# 				PI_T[t].append((i, j, py))
-# 				j += 1
-
-# 				if j >= num_bins:
-# 					break
-
-# 				px = px - py
-# 				py = Y_[j]
-
-# 	return PI_T, normsx_T, normsy_T
-
-# # depends on a few of the variables we just calculated
-# def calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T, tx):
-# 	START_TIME = time()
-# 	T = len(PI_T)
-# 	Z_nT = np.zeros_like(X)
-# 	# TODO: also deal with normalization "scaling is interpolated linearly over the interpolation"
-# 		# this means that for a value k, and timestep t, 
-# 	for t in tqdm(range(T)):
-# 		for i, j, PI_ij in PI_T[t]:
-
-# 			w = (1-k) * wx[i] + k*wx[j] # floating point frequency
-
-
-# 			w_index = w * freq_to_idx
-# 			w_index1 = int(w_index)
-# 			# Z_nT[w_index1] += PI_nnT[i][j]
-# 			w_alpha = w_index - w_index1
-# 			Z_nT[w_index1, t] += (1 - w_alpha) * PI_ij
-# 			if w_alpha != 0: # if its 0 we may get an index out of bounds
-# 				Z_nT[w_index1 + 1, t] += w_alpha * PI_ij
-	
-# 	# unnormalize for loudness
-# 	for t in range(T):
-# 		Z_nT[:, t] *= (1 - k) * normsx_T[t] + k * normsy_T[t]
-
-# 	# fig, ax = plt.subplots()
-# 	# plt.ylim(0, 2000)
-# 	# ax.pcolormesh(tx, wx, np.abs(Z_nT))
-# 	# plt.show()
-
-# 	output = librosa.griffinlim(Z_nT, n_iter=200, hop_length=nperseg//2, win_length=nperseg, n_fft=fft_size, window=window)
-# 	output = output / (2*np.max(output))
-
-# 	# assert check_COLA(window, nperseg, nperseg//2)
-# 	# t, output = istft(Z_nT, fs=SAMPLERATE, window=window, nperseg=nperseg, nfft=fft_size)
-# 	END_TIME = time()
-# 	print("COMPUTE INTERPOLATION TOTAL TIME:", END_TIME - START_TIME)
-# 	return output
-
-
-
-# # get stft
-# START_TIME = time()
-
-# wx, tx, X = stft(audiox, fs=SAMPLERATE, window=window, nperseg=nperseg, nfft=fft_size)
-# wy, ty, Y = stft(audioy, fs=SAMPLERATE, window=window, nperseg=nperseg, nfft=fft_size)
-# # T = tx.shape[0] # Max number of FFT steps
-# END_TIME = time()
-# print("STFT TIME:", END_TIME - START_TIME)
-
-
-# # freq * freq_to_idx = idx into w array
-# freq_to_idx = (num_bins - 1) / (wx[-1])
-
-# # sanity check
-# assert wx.shape[0] == wy.shape[0]
-# assert [a == b for a, b in zip(wx, wy)] # same frequency bins
-# assert tx.shape[0] == ty.shape[0]
-# assert [a == b for a, b in zip(tx, ty)] # same time bins
-	
-
-# # TODO: Find a profile - find a look at which part is taking so long
-# # TODO: Try this on dummy spectrums, and just 1 spectrums
-# START_TIME = time()
-# PI_T, normsx_T, normsy_T = compute_transport_matrix(X,Y)
-# END_TIME = time()
-# print("COMPUTE TRANSPORT MATRIX TIME:", END_TIME - START_TIME)
-
-# k = float(input("enter interpolation value (0 to 1, -1 to exit): "))
-
-# aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T, tx)
-
-# audio_output_array = np.concatenate([aoa, aoa])
-
-# player = AudioPlayer()
-
-# # loop unless user inputs -1
-# while k != -1 and stream.is_active():
-# 	k = float(input("enter interpolation value (0 to 1, -1 to exit): "))
-# 	# TODO: Update audio_output_array and calculate new interpolation
-# 	aoa = calculate_interpolation(k, PI_T, wx, normsx_T, normsy_T, tx)
-# 	player.arr = np.concatenate([aoa, aoa])
-# 	# time.sleep(0.5)
