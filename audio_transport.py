@@ -13,8 +13,10 @@ import pyaudio
 SAMPLERATE = 48000
 AUDIO_FILE1 = "440sine48k.wav"
 AUDIO_FILE2 = "440saw48k.wav"
-FFT_SIZE = 1024
-NPERSEG = 1024
+FFT_SIZE = 2048
+NPERSEG = 2048
+
+LENGTH = 1 # seconds
 
 
 class AudioPlayer:
@@ -136,7 +138,7 @@ def load_audio(file1, file2, sr):
 
 	audio_length = audiox.shape[0]
 
-	return audiox, audioy, audio_length
+	return audiox[:LENGTH * sr], audioy[:LENGTH * sr], LENGTH * sr
 
 def analyze(audio):
 	# Audio to Spectral Points
