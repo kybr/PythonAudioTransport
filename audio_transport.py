@@ -31,25 +31,6 @@ class AudioPlayer:
 		self.index = (self.index + frame_count) % (self.arr.shape[0] // 2)
 		return (out, pyaudio.paContinue)
 
-# class AudioPlayer:
-# 	def __init__(self, audio_array):
-# 		self.index = 0
-# 		self.arr = audio_array
-
-# 	def audio_callback(self, in_data, frame_count, time_info, status):
-# 		# TODO: Loop arr
-# 		out = np.array([])
-# 		while frame_count > 0:
-# 			# get samples to compute for circular buffer
-# 			samples_this_time = min(frame_count, self.arr.shape[0] - self.index)
-
-# 			# add samples to output array
-# 			np.concatenate([out, self.arr[self.index:samples_this_time + self.index]])
-
-# 			# update indices
-# 			self.index = (self.index + samples_this_time) % self.arr.shape[0]
-# 			frame_count -= samples_this_time
-# 		return (out, pyaudio.paContinue)
 
 def main():
 
@@ -432,13 +413,8 @@ def derivative_hann(length):
 	# length = sr * window_length_in_seconds
 	# we are deriving w.r.t t = np.arange(length) / sr 
 	# derivative uses law: 2sin(x)cos(x) = sin(2x)
-	# t = np.arange(-(length - 1) // 2, 1 + (length - 1) // 2)
-	# window =  -(np.pi * SAMPLERATE)/(length - 1) * np.sin(2 * np.pi * t/(length - 1))
-	# return window
 
 	return np.pi * SAMPLERATE * np.sin(2 * np.pi * np.arange(length) / length) / length
-	# return np.sin(2 * np.pi * np.arange(length) / length)
-	# return np.sin(np.arange(length))
 
 
 if __name__ == "__main__":
