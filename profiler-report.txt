@@ -1,0 +1,263 @@
+         113850694 function calls (113845046 primitive calls) in 80.483 seconds
+
+   Ordered by: standard name
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+       44    0.000    0.000    0.005    0.000 <__array_function__ internals>:2(amax)
+ 12160663    3.001    0.000   19.918    0.000 <__array_function__ internals>:2(angle)
+       22    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(any)
+      133    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(around)
+       22    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(concatenate)
+     1980    0.001    0.000    0.004    0.000 <__array_function__ internals>:2(copyto)
+     1980    0.001    0.000    0.004    0.000 <__array_function__ internals>:2(empty_like)
+  2029500    0.528    0.000    1.657    0.000 <__array_function__ internals>:2(imag)
+       22    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(iscomplexobj)
+       22    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(isrealobj)
+       22    0.000    0.000    0.002    0.000 <__array_function__ internals>:2(linspace)
+        1    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(mean)
+      132    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(moveaxis)
+       22    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(ndim)
+      133    0.000    0.000    0.004    0.000 <__array_function__ internals>:2(pad)
+      132    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(prod)
+       44    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(result_type)
+      264    0.000    0.000    0.041    0.000 <__array_function__ internals>:2(rfft)
+      133    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(round_)
+       22    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(sum)
+      528    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(swapaxes)
+       22    0.000    0.000    0.000    0.000 <__array_function__ internals>:2(transpose)
+       22    0.000    0.000    0.001    0.000 <__array_function__ internals>:2(where)
+     1980    0.001    0.000    0.014    0.000 <__array_function__ internals>:2(zeros_like)
+        1    0.014    0.014   81.032   81.032 <string>:1(<module>)
+   426866    0.085    0.000    0.085    0.000 <string>:2(__init__)
+       22    0.000    0.000    0.009    0.000 _backend.py:16(__ua_function__)
+        2    0.000    0.000    0.000    0.000 _dtype.py:24(_kind_name)
+        2    0.000    0.000    0.000    0.000 _dtype.py:307(_name_includes_bit_suffix)
+        2    0.000    0.000    0.000    0.000 _dtype.py:321(_name_get)
+        1    0.000    0.000    0.000    0.000 _methods.py:162(_mean)
+       22    0.000    0.000    0.000    0.000 _methods.py:46(_sum)
+       22    0.000    0.000    0.000    0.000 _methods.py:54(_any)
+      136    0.000    0.000    0.001    0.000 _methods.py:60(_all)
+        1    0.000    0.000    0.000    0.000 _methods.py:66(_count_reduce_items)
+      264    0.000    0.000    0.000    0.000 _pocketfft.py:118(_fft_dispatcher)
+      264    0.000    0.000    0.041    0.000 _pocketfft.py:320(rfft)
+      264    0.000    0.000    0.041    0.000 _pocketfft.py:49(_raw_fft)
+      264    0.000    0.000    0.000    0.000 _pocketfft.py:78(_get_forward_norm)
+       22    0.013    0.001    0.029    0.001 _spectral_py.py:1181(istft)
+       22    0.000    0.000    0.000    0.000 _windows.py:16(_len_guards)
+       22    0.000    0.000    0.003    0.000 _windows.py:2051(get_window)
+       22    0.000    0.000    0.000    0.000 _windows.py:23(_extend)
+       22    0.000    0.000    0.000    0.000 _windows.py:31(_truncate)
+       22    0.001    0.000    0.003    0.000 _windows.py:39(general_cosine)
+       22    0.000    0.000    0.003    0.000 _windows.py:708(hann)
+       22    0.000    0.000    0.003    0.000 _windows.py:933(general_hamming)
+      132    0.000    0.000    0.000    0.000 abc.py:117(__instancecheck__)
+      5/1    0.000    0.000    0.000    0.000 abc.py:121(__subclasscheck__)
+      266    0.000    0.000    0.000    0.000 arraypad.py:109(<genexpr>)
+      266    0.000    0.000    0.000    0.000 arraypad.py:120(<genexpr>)
+      132    0.000    0.000    0.000    0.000 arraypad.py:129(_set_pad_area)
+      266    0.000    0.000    0.000    0.000 arraypad.py:33(_slice_at_axis)
+        1    0.000    0.000    0.000    0.000 arraypad.py:381(_set_wrap_both)
+      265    0.001    0.000    0.001    0.000 arraypad.py:454(_as_pairs)
+      133    0.000    0.000    0.000    0.000 arraypad.py:521(_pad_dispatcher)
+      133    0.001    0.000    0.004    0.000 arraypad.py:529(pad)
+      133    0.000    0.000    0.000    0.000 arraypad.py:58(_view_roi)
+      133    0.001    0.000    0.001    0.000 arraypad.py:86(_pad_simple)
+        2    0.000    0.000    0.001    0.000 audio.py:436(to_mono)
+        2    0.000    0.000    0.001    0.001 audio.py:47(load)
+        2    0.000    0.000    0.000    0.000 audio.py:474(resample)
+        1    0.000    0.000    0.001    0.001 audio_transport.py:124(load_audio)
+       44   17.186    0.391   19.345    0.440 audio_transport.py:139(analyze)
+        1    0.000    0.000    0.000    0.000 audio_transport.py:17(signal_handling)
+      990    1.949    0.002   61.150    0.062 audio_transport.py:190(interpolate)
+   851752   33.319    0.000   54.502    0.000 audio_transport.py:277(place_mass)
+     1980    3.696    0.002    4.293    0.002 audio_transport.py:296(group_spectrum)
+     1980    0.176    0.000    0.258    0.000 audio_transport.py:301(<listcomp>)
+        1    0.000    0.000    0.000    0.000 audio_transport.py:34(__init__)
+      990    0.125    0.000    0.155    0.000 audio_transport.py:368(transport_matrix)
+       22    0.002    0.000    0.122    0.006 audio_transport.py:405(synthesize)
+       22    0.000    0.000    0.048    0.002 audio_transport.py:408(<listcomp>)
+       88    0.002    0.000    0.003    0.000 audio_transport.py:415(hann)
+       44    0.000    0.000    0.001    0.000 audio_transport.py:421(time_weighted_hann)
+       44    0.001    0.000    0.001    0.000 audio_transport.py:427(derivative_hann)
+        1    0.194    0.194   81.018   81.018 audio_transport.py:45(main)
+       22    0.001    0.000    0.001    0.000 audio_transport.py:90(<listcomp>)
+       22    0.001    0.000    0.001    0.000 audio_transport.py:91(<listcomp>)
+       22    0.000    0.000    0.009    0.000 basic.py:71(c2r)
+  932/134    0.001    0.000    0.079    0.001 decorators.py:84(inner_f)
+      132    0.000    0.000    0.000    0.000 fft.py:43(get_fftlib)
+      132    0.000    0.000    0.001    0.000 filters.py:1131(get_window)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:2118(_sum_dispatcher)
+       22    0.000    0.000    0.001    0.000 fromnumeric.py:2123(sum)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:2263(_any_dispatcher)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:2268(any)
+       44    0.000    0.000    0.000    0.000 fromnumeric.py:2633(_amax_dispatcher)
+       44    0.000    0.000    0.005    0.000 fromnumeric.py:2638(amax)
+      132    0.000    0.000    0.000    0.000 fromnumeric.py:2928(_prod_dispatcher)
+      132    0.000    0.000    0.001    0.000 fromnumeric.py:2933(prod)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:3123(_ndim_dispatcher)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:3127(ndim)
+      266    0.000    0.000    0.000    0.000 fromnumeric.py:3216(_around_dispatcher)
+      133    0.000    0.000    0.000    0.000 fromnumeric.py:3220(around)
+        1    0.000    0.000    0.000    0.000 fromnumeric.py:3317(_mean_dispatcher)
+        1    0.000    0.000    0.000    0.000 fromnumeric.py:3322(mean)
+      133    0.000    0.000    0.001    0.000 fromnumeric.py:3730(round_)
+      683    0.000    0.000    0.001    0.000 fromnumeric.py:51(_wrapfunc)
+      528    0.000    0.000    0.000    0.000 fromnumeric.py:546(_swapaxes_dispatcher)
+      528    0.000    0.000    0.001    0.000 fromnumeric.py:550(swapaxes)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:597(_transpose_dispatcher)
+       22    0.000    0.000    0.000    0.000 fromnumeric.py:601(transpose)
+      220    0.000    0.000    0.008    0.000 fromnumeric.py:69(_wrapreduction)
+      220    0.000    0.000    0.000    0.000 fromnumeric.py:70(<dictcomp>)
+ 12160663    0.727    0.000    0.727    0.000 function_base.py:1442(_angle_dispatcher)
+ 12160663    8.428    0.000   10.668    0.000 function_base.py:1446(angle)
+       22    0.000    0.000    0.000    0.000 function_base.py:18(_linspace_dispatcher)
+       22    0.001    0.000    0.002    0.000 function_base.py:23(linspace)
+        2    0.000    0.000    0.000    0.000 genericpath.py:121(_splitext)
+        2    0.000    0.000    0.000    0.000 genericpath.py:27(isfile)
+       22    0.000    0.000    0.000    0.000 helper.py:112(_fix_shape)
+       22    0.000    0.000    0.000    0.000 helper.py:139(_fix_shape_1d)
+       22    0.000    0.000    0.000    0.000 helper.py:150(_normalization)
+       22    0.000    0.000    0.000    0.000 helper.py:161(_workers)
+       22    0.000    0.000    0.000    0.000 helper.py:80(_asfarray)
+     1980    0.000    0.000    0.000    0.000 multiarray.py:1071(copyto)
+       22    0.000    0.000    0.000    0.000 multiarray.py:148(concatenate)
+       22    0.000    0.000    0.000    0.000 multiarray.py:341(where)
+       44    0.000    0.000    0.000    0.000 multiarray.py:664(result_type)
+     1980    0.000    0.000    0.000    0.000 multiarray.py:80(empty_like)
+      264    0.000    0.000    0.001    0.000 numeric.py:1335(normalize_axis_tuple)
+      264    0.000    0.000    0.000    0.000 numeric.py:1385(<listcomp>)
+      132    0.000    0.000    0.000    0.000 numeric.py:1394(_moveaxis_dispatcher)
+      132    0.000    0.000    0.001    0.000 numeric.py:1398(moveaxis)
+      132    0.000    0.000    0.000    0.000 numeric.py:1460(<listcomp>)
+      154    0.000    0.000    0.001    0.000 numeric.py:1858(isscalar)
+     1980    0.000    0.000    0.000    0.000 numeric.py:72(_zeros_like_dispatcher)
+     1980    0.003    0.000    0.012    0.000 numeric.py:76(zeros_like)
+      320    0.000    0.000    0.000    0.000 numerictypes.py:284(issubclass_)
+      160    0.000    0.000    0.001    0.000 numerictypes.py:358(issubdtype)
+        2    0.000    0.000    0.000    0.000 posixpath.py:117(splitext)
+        1    0.000    0.000    0.034    0.034 pyaudio.py:289(__init__)
+        1    0.000    0.000    0.001    0.001 pyaudio.py:449(close)
+        1    0.000    0.000    0.000    0.000 pyaudio.py:505(start_stream)
+        1    0.000    0.000    0.135    0.135 pyaudio.py:514(stop_stream)
+       23    0.000    0.000    0.000    0.000 pyaudio.py:527(is_active)
+        1    0.000    0.000    0.028    0.028 pyaudio.py:674(__init__)
+        1    0.000    0.000    0.000    0.000 pyaudio.py:680(terminate)
+        1    0.000    0.000    0.000    0.000 pyaudio.py:712(get_format_from_width)
+        1    0.000    0.000    0.034    0.034 pyaudio.py:742(open)
+        1    0.000    0.000    0.000    0.000 pyaudio.py:767(_remove_stream)
+       22    0.000    0.000    0.000    0.000 random.py:511(uniform)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1137(flush)
+        4    0.000    0.000    0.000    0.000 soundfile.py:1151(close)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1160(_open)
+       10    0.000    0.000    0.000    0.000 soundfile.py:1253(_check_if_closed)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1262(_check_frames)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1284(_create_empty_array)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1293(_check_dtype)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1301(_array_io)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1314(_cdata_io)
+       12    0.000    0.000    0.000    0.000 soundfile.py:1353(_error_check)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1392(_check_mode)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1411(_create_info_struct)
+       12    0.000    0.000    0.000    0.000 soundfile.py:1431(<genexpr>)
+        2    0.000    0.000    0.000    0.000 soundfile.py:1438(_get_format_from_filename)
+        2    0.000    0.000    0.000    0.000 soundfile.py:527(__init__)
+        2    0.000    0.000    0.000    0.000 soundfile.py:636(<lambda>)
+        4    0.000    0.000    0.000    0.000 soundfile.py:638(<lambda>)
+        2    0.000    0.000    0.000    0.000 soundfile.py:640(<lambda>)
+        2    0.000    0.000    0.000    0.000 soundfile.py:642(<lambda>)
+        5    0.000    0.000    0.000    0.000 soundfile.py:644(<lambda>)
+       14    0.000    0.000    0.000    0.000 soundfile.py:665(<lambda>)
+        8    0.000    0.000    0.000    0.000 soundfile.py:667(<lambda>)
+        2    0.000    0.000    0.000    0.000 soundfile.py:687(__del__)
+        2    0.000    0.000    0.000    0.000 soundfile.py:690(__enter__)
+        2    0.000    0.000    0.000    0.000 soundfile.py:693(__exit__)
+       10    0.000    0.000    0.000    0.000 soundfile.py:696(__setattr__)
+        6    0.000    0.000    0.000    0.000 soundfile.py:731(seekable)
+        6    0.000    0.000    0.000    0.000 soundfile.py:735(seek)
+        4    0.000    0.000    0.000    0.000 soundfile.py:776(tell)
+        2    0.000    0.000    0.000    0.000 soundfile.py:780(read)
+      132    0.018    0.000    0.077    0.001 spectrum.py:42(stft)
+      132    0.000    0.000    0.000    0.000 stride_tricks.py:20(__init__)
+      132    0.000    0.000    0.000    0.000 stride_tricks.py:25(_maybe_view_as_subclass)
+      132    0.001    0.000    0.001    0.000 stride_tricks.py:38(as_strided)
+  2029500    0.109    0.000    0.109    0.000 type_check.py:163(_imag_dispatcher)
+  2029500    0.236    0.000    0.236    0.000 type_check.py:167(imag)
+       44    0.000    0.000    0.000    0.000 type_check.py:206(_is_type_dispatcher)
+       22    0.000    0.000    0.000    0.000 type_check.py:303(iscomplexobj)
+       22    0.000    0.000    0.000    0.000 type_check.py:344(isrealobj)
+      132    0.000    0.000    0.000    0.000 utils.py:2081(dtype_r2c)
+      136    0.006    0.000    0.007    0.000 utils.py:213(valid_audio)
+      132    0.000    0.000    0.005    0.000 utils.py:362(pad_center)
+      132    0.000    0.000    0.000    0.000 utils.py:436(expand_to)
+      132    0.000    0.000    0.003    0.000 utils.py:52(frame)
+      132    0.000    0.000    0.000    0.000 {built-in method _abc._abc_instancecheck}
+      5/1    0.000    0.000    0.000    0.000 {built-in method _abc._abc_subclasscheck}
+      286    0.000    0.000    0.000    0.000 {built-in method _operator.index}
+        1    0.001    0.001    0.001    0.001 {built-in method _portaudio.close}
+        1    0.028    0.028    0.028    0.028 {built-in method _portaudio.initialize}
+       23    0.000    0.000    0.000    0.000 {built-in method _portaudio.is_stream_active}
+        1    0.008    0.008    0.008    0.008 {built-in method _portaudio.open}
+        1    0.026    0.026    0.026    0.026 {built-in method _portaudio.start_stream}
+        1    0.135    0.135    0.135    0.135 {built-in method _portaudio.stop_stream}
+        1    0.000    0.000    0.000    0.000 {built-in method _portaudio.terminate}
+        2    0.000    0.000    0.000    0.000 {built-in method _stat.S_ISREG}
+ 15367911    0.887    0.000    0.887    0.000 {built-in method builtins.abs}
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.any}
+      265    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        1    0.000    0.000   81.032   81.032 {built-in method builtins.exec}
+      885    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+       24    0.000    0.000    0.000    0.000 {built-in method builtins.hasattr}
+      924    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+ 12161169    0.474    0.000    0.474    0.000 {built-in method builtins.issubclass}
+ 11744462    0.569    0.000    0.569    0.000 {built-in method builtins.len}
+      132    0.000    0.000    0.000    0.000 {built-in method builtins.max}
+      265    0.000    0.000    0.000    0.000 {built-in method builtins.min}
+   425876    0.044    0.000    0.044    0.000 {built-in method builtins.round}
+      154    0.000    0.000    0.000    0.000 {built-in method builtins.sorted}
+     1980    0.145    0.000    0.145    0.000 {built-in method builtins.sum}
+      264    0.001    0.000    0.001    0.000 {built-in method numpy.arange}
+      573    0.042    0.000    0.042    0.000 {built-in method numpy.array}
+ 12160708    1.766    0.000    1.766    0.000 {built-in method numpy.asanyarray}
+      816    0.001    0.000    0.001    0.000 {built-in method numpy.asarray}
+14197845/14193003    6.314    0.000   17.281    0.000 {built-in method numpy.core._multiarray_umath.implement_array_function}
+      529    0.000    0.000    0.000    0.000 {built-in method numpy.core._multiarray_umath.normalize_axis_index}
+      267    0.000    0.000    0.000    0.000 {built-in method numpy.empty}
+      264    0.039    0.000    0.039    0.000 {built-in method numpy.fft._pocketfft_internal.execute}
+     2069    0.002    0.000    0.002    0.000 {built-in method numpy.zeros}
+        2    0.000    0.000    0.000    0.000 {built-in method posix.fspath}
+        2    0.000    0.000    0.000    0.000 {built-in method posix.stat}
+       22    0.009    0.000    0.009    0.000 {built-in method scipy.fft._pocketfft.pypocketfft.c2r}
+        2    0.000    0.000    0.000    0.000 {built-in method sys.getfilesystemencoding}
+        1    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+      136    0.000    0.000    0.001    0.000 {method 'all' of 'numpy.ndarray' objects}
+       22    0.000    0.000    0.000    0.000 {method 'any' of 'numpy.generic' objects}
+  3897982    0.143    0.000    0.143    0.000 {method 'append' of 'list' objects}
+      177    0.000    0.000    0.000    0.000 {method 'astype' of 'numpy.ndarray' objects}
+        2    0.000    0.000    0.000    0.000 {method 'cast' of '_cffi_backend.FFI' objects}
+        1    0.000    0.000    0.000    0.000 {method 'copy' of 'set' objects}
+        2    0.000    0.000    0.000    0.000 {method 'difference' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        2    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        4    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+      264    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+      132    0.000    0.000    0.000    0.000 {method 'insert' of 'list' objects}
+        2    0.000    0.000    0.000    0.000 {method 'intersection' of 'set' objects}
+        4    0.000    0.000    0.000    0.000 {method 'issuperset' of 'set' objects}
+      220    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 {method 'new' of '_cffi_backend.FFI' objects}
+       22    0.000    0.000    0.000    0.000 {method 'newbyteorder' of 'numpy.dtype' objects}
+       44    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+       22    0.000    0.000    0.000    0.000 {method 'random' of '_random.Random' objects}
+      265    0.000    0.000    0.000    0.000 {method 'ravel' of 'numpy.ndarray' objects}
+      379    0.008    0.000    0.008    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+        1    0.000    0.000    0.000    0.000 {method 'remove' of 'set' objects}
+      154    0.000    0.000    0.000    0.000 {method 'reshape' of 'numpy.ndarray' objects}
+        4    0.000    0.000    0.000    0.000 {method 'rfind' of 'str' objects}
+      133    0.000    0.000    0.000    0.000 {method 'round' of 'numpy.ndarray' objects}
+      132    0.000    0.000    0.000    0.000 {method 'setdefault' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 {method 'sizeof' of '_cffi_backend.FFI' objects}
+       22    0.000    0.000    0.000    0.000 {method 'sum' of 'numpy.ndarray' objects}
+      528    0.000    0.000    0.000    0.000 {method 'swapaxes' of 'numpy.ndarray' objects}
+      154    0.000    0.000    0.000    0.000 {method 'transpose' of 'numpy.ndarray' objects}
+        4    0.000    0.000    0.000    0.000 {method 'upper' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 {method 'values' of 'dict' objects}

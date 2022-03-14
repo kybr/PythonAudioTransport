@@ -3,12 +3,22 @@ import librosa
 import soundfile as sf
 import numpy as np
 import matplotlib.pyplot as plt
+from random import uniform
 from scipy.interpolate import interp1d
 from tqdm import tqdm
 from time import time
 # from AudioPlayer import AudioPlayer
 from SpectralPointAndMass import SpectralPoint, SpectralMass
 import pyaudio
+
+import signal,sys,time
+terminate = False
+
+def signal_handling(signum,frame):
+	global terminate
+	terminate = True
+
+signal.signal(signal.SIGINT,signal_handling)
 
 SAMPLERATE = 48000
 AUDIO_FILE1 = "440sine48k.wav"
@@ -55,7 +65,11 @@ def main():
 
 	while stream.is_active():
 
-		interpolation_factor = float(input("enter interpolation value (0 to 1): "))
+		if terminate:
+			break
+
+		interpolation_factor = uniform(0, 1)
+		#interpolation_factor = float(input("enter interpolation value (0 to 1): "))
 
 		# In the c++ implementation, we MAY need to do the whole analysis at every audio callback
 
@@ -79,7 +93,8 @@ def main():
 		# plt.plot(test_freqs, test_freq_reassigned)
 		# plt.plot([p.freq_reassigned for p in spectral_points_x_T[1]], [np.abs(p.value) for p in spectral_points_x_T[1]])
 		# plt.show()
-		for t in tqdm(range(T)):
+		for t in (range(T)):
+		#for t in tqdm(range(T)):
 			phases, output_points = interpolate(
 				spectral_points_x_T[t],
 				spectral_points_y_T[t],
@@ -142,7 +157,8 @@ def analyze(audio):
 	output_points = []
 
 	# For each time frame
-	for t in tqdm(range(T)):
+	for t in (range(T)):
+	#for t in tqdm(range(T)):
 		output_points.append([])
 
 		# get the time of the center of this frame
@@ -416,6 +432,8 @@ def derivative_hann(length):
 
 	return np.pi * SAMPLERATE * np.sin(2 * np.pi * np.arange(length) / length) / length
 
+import cProfile
+cProfile.run('main()')
 
 if __name__ == "__main__":
 	main()
